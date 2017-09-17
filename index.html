@@ -298,7 +298,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p></p><h4><br>第一种方法：基于注解的配置方式<br></h4><br>通过注解配置的方式要注意普通sql语句和动态sql两种情况。<br>普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。<br>使用方法：以@Select为例通过ID查询信息，其他3种类似。<p></p>
+        <p>description: “使用mybatis实现DAO层的2种方式”</p>
+<p></p><h4><br>第一种方法：基于注解的配置方式<br></h4><br>通过注解配置的方式要注意普通sql语句和动态sql两种情况。<br>普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。<br>使用方法：以@Select为例通过ID查询信息，其他3种类似。<p></p>
 <pre><code>@Select(&quot;select * from &quot;+DEPTTABLE+&quot; where ID = #{id}&quot;)
 Dept selectById(int id);
 </code></pre><p>要实现复杂的动态sql查询，则需要额外创建Provider类来实现。<br>支持动态sql的注解有@SelectProvider,@InsertProvider,@UpdateProvider,@DeleteProvider四种<br>注解中常用的2种参数<br>①type:指定动态sql方法的类<br>②method:该类中对应的方法<br>使用方法：动态查询总数量</p>
@@ -324,14 +325,11 @@ public String count(final Map&lt;String, Object&gt; params){
 <p></p><h4><br>第二种方法：通过mapper.xml的方法实现DAO层。<br></h4><br>mapper.xml可以通过mybatis自动生成，但是会有部分地方要修改。<br>建议先通过mybatis自动生成，然后自己去修改成想要的状态，自动生成方法为MBG，可以自己去看一下。<p></p>
 <p>这是DAO层的一个接口。</p>
 <pre><code>long countByExample(EmployeeExample example);
-</code></pre><p>这是该DAO层对应的mapper.xml文件中与上面对应的sql查询方法。<br>该方法的3个参数：<br>①id:即DAO层接口方法的名字。<br>②parameterType：即对应方法所在的类。<br>③resultType：返回值类型。</p>
-<pre><code>&lt;select id=&quot;countByExample&quot; parameterType=&quot;com.atguigu.crud.bean.EmployeeExample&quot; resultType=&quot;java.lang.Long&quot;&gt;
-select count(*) from tbl_emp
-&lt;if test=&quot;_parameter != null&quot;&gt;
-  &lt;include refid=&quot;Example_Where_Clause&quot; /&gt;
-&lt;/if&gt;
-&lt;/select&gt;
-</code></pre><p>使用mapper.xml方法可以直接在xml文件中写动态sql语句。<br>以上就是mybatis实现DAO层的两种方法的大致了解。</p>
+</code></pre><p>下面是该DAO层对应的mapper.xml文件中与上面对应的sql查询方法。<br>xml文件开始要指明对应的类。这样才能找到对应的方法。<br>mapper.xml中主要是用标签组合成sql语句，具体的使用方法可以自行了解。</p>
+<pre><code>&lt;mapper namespace=&quot;com.atguigu.crud.dao.EmployeeMapper&quot;&gt;
+</code></pre><select>标签的3个参数：<br>①id:即DAO层接口方法的名字。<br>②parameterType：传入参数的类型。<br>③resultType：返回值类型。<br><br>    </select><select id="countByExample" parametertype="com.atguigu.crud.bean.EmployeeExample" resulttype="java.lang.Long"><br>    select count(*) from tbl_emp<br>    <if test="_parameter != null"><br>      <include refid="Example_Where_Clause"><br>    </include></if><br>    </select>
+
+<p>使用mapper.xml方法可以直接在xml文件中写动态sql语句。<br>以上就是mybatis实现DAO层的两种方法的大致了解。</p>
 
       
     </div>
@@ -341,123 +339,6 @@ select count(*) from tbl_emp
       
 
       
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/16/hello-world/" class="article-date">
-      <time datetime="2017-09-16T03:07:56.827Z" itemprop="datePublished">2017-09-16</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/16/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <a id="more"></a>
-<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-new-article" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/03/new-article/" class="article-date">
-      <time datetime="2015-12-02T16:00:00.000Z" itemprop="datePublished">2015-12-03</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/03/new-article/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p><excerpt in="" index=""><br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-        <p class="article-more-link">
-          <a href="/2015/12/03/new-article/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>

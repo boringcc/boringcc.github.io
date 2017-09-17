@@ -15,17 +15,17 @@
 
 
 
-<meta name="description" content="第一种方法：基于注解的配置方式通过注解配置的方式要注意普通sql语句和动态sql两种情况。普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。使用方法：以@Select为例通过ID查询信息，其他3种类似。 @Select(&amp;quot;select * from &amp;quot;+DEPTTABLE+&amp;quot; where ID = #{i">
+<meta name="description" content="description: “使用mybatis实现DAO层的2种方式” 第一种方法：基于注解的配置方式通过注解配置的方式要注意普通sql语句和动态sql两种情况。普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。使用方法：以@Select为例通过ID查询信息，其他3种类似。 @Select(&amp;quot;select * from &amp;q">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MyBatis DAO层实现的两种方法">
 <meta property="og:url" content="http://yoursite.com/2017/09/17/MyBatis-DAO层实现两种方法/index.html">
 <meta property="og:site_name" content="CC&#39;blog">
-<meta property="og:description" content="第一种方法：基于注解的配置方式通过注解配置的方式要注意普通sql语句和动态sql两种情况。普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。使用方法：以@Select为例通过ID查询信息，其他3种类似。 @Select(&amp;quot;select * from &amp;quot;+DEPTTABLE+&amp;quot; where ID = #{i">
+<meta property="og:description" content="description: “使用mybatis实现DAO层的2种方式” 第一种方法：基于注解的配置方式通过注解配置的方式要注意普通sql语句和动态sql两种情况。普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。使用方法：以@Select为例通过ID查询信息，其他3种类似。 @Select(&amp;quot;select * from &amp;q">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-09-17T06:34:44.969Z">
+<meta property="og:updated_time" content="2017-09-17T06:44:12.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MyBatis DAO层实现的两种方法">
-<meta name="twitter:description" content="第一种方法：基于注解的配置方式通过注解配置的方式要注意普通sql语句和动态sql两种情况。普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。使用方法：以@Select为例通过ID查询信息，其他3种类似。 @Select(&amp;quot;select * from &amp;quot;+DEPTTABLE+&amp;quot; where ID = #{i">
+<meta name="twitter:description" content="description: “使用mybatis实现DAO层的2种方式” 第一种方法：基于注解的配置方式通过注解配置的方式要注意普通sql语句和动态sql两种情况。普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。使用方法：以@Select为例通过ID查询信息，其他3种类似。 @Select(&amp;quot;select * from &amp;q">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -302,7 +302,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p></p><h4><br>第一种方法：基于注解的配置方式<br></h4><br>通过注解配置的方式要注意普通sql语句和动态sql两种情况。<br>普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。<br>使用方法：以@Select为例通过ID查询信息，其他3种类似。<p></p>
+        <p>description: “使用mybatis实现DAO层的2种方式”</p>
+<p></p><h4><br>第一种方法：基于注解的配置方式<br></h4><br>通过注解配置的方式要注意普通sql语句和动态sql两种情况。<br>普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。<br>使用方法：以@Select为例通过ID查询信息，其他3种类似。<p></p>
 <pre><code>@Select(&quot;select * from &quot;+DEPTTABLE+&quot; where ID = #{id}&quot;)
 Dept selectById(int id);
 </code></pre><p>要实现复杂的动态sql查询，则需要额外创建Provider类来实现。<br>支持动态sql的注解有@SelectProvider,@InsertProvider,@UpdateProvider,@DeleteProvider四种<br>注解中常用的2种参数<br>①type:指定动态sql方法的类<br>②method:该类中对应的方法<br>使用方法：动态查询总数量</p>
@@ -328,14 +329,11 @@ public String count(final Map&lt;String, Object&gt; params){
 <p></p><h4><br>第二种方法：通过mapper.xml的方法实现DAO层。<br></h4><br>mapper.xml可以通过mybatis自动生成，但是会有部分地方要修改。<br>建议先通过mybatis自动生成，然后自己去修改成想要的状态，自动生成方法为MBG，可以自己去看一下。<p></p>
 <p>这是DAO层的一个接口。</p>
 <pre><code>long countByExample(EmployeeExample example);
-</code></pre><p>这是该DAO层对应的mapper.xml文件中与上面对应的sql查询方法。<br>该方法的3个参数：<br>①id:即DAO层接口方法的名字。<br>②parameterType：即对应方法所在的类。<br>③resultType：返回值类型。</p>
-<pre><code>&lt;select id=&quot;countByExample&quot; parameterType=&quot;com.atguigu.crud.bean.EmployeeExample&quot; resultType=&quot;java.lang.Long&quot;&gt;
-select count(*) from tbl_emp
-&lt;if test=&quot;_parameter != null&quot;&gt;
-  &lt;include refid=&quot;Example_Where_Clause&quot; /&gt;
-&lt;/if&gt;
-&lt;/select&gt;
-</code></pre><p>使用mapper.xml方法可以直接在xml文件中写动态sql语句。<br>以上就是mybatis实现DAO层的两种方法的大致了解。</p>
+</code></pre><p>下面是该DAO层对应的mapper.xml文件中与上面对应的sql查询方法。<br>xml文件开始要指明对应的类。这样才能找到对应的方法。<br>mapper.xml中主要是用标签组合成sql语句，具体的使用方法可以自行了解。</p>
+<pre><code>&lt;mapper namespace=&quot;com.atguigu.crud.dao.EmployeeMapper&quot;&gt;
+</code></pre><select>标签的3个参数：<br>①id:即DAO层接口方法的名字。<br>②parameterType：传入参数的类型。<br>③resultType：返回值类型。<br><br>    </select><select id="countByExample" parametertype="com.atguigu.crud.bean.EmployeeExample" resulttype="java.lang.Long"><br>    select count(*) from tbl_emp<br>    <if test="_parameter != null"><br>      <include refid="Example_Where_Clause"><br>    </include></if><br>    </select>
+
+<p>使用mapper.xml方法可以直接在xml文件中写动态sql语句。<br>以上就是mybatis实现DAO层的两种方法的大致了解。</p>
 
       
     </div>
@@ -347,7 +345,7 @@ select count(*) from tbl_emp
         <p><span>本文标题:</span><a href="/2017/09/17/MyBatis-DAO层实现两种方法/">MyBatis DAO层实现的两种方法</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">C C</a></p>
         <p><span>发布时间:</span>2017-09-17, 13:37:28</p>
-        <p><span>最后更新:</span>2017-09-17, 14:34:44</p>
+        <p><span>最后更新:</span>2017-09-17, 14:44:12</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/09/17/MyBatis-DAO层实现两种方法/" title="MyBatis DAO层实现的两种方法">http://yoursite.com/2017/09/17/MyBatis-DAO层实现两种方法/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/09/17/MyBatis-DAO层实现两种方法/　　作者: C C" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -359,17 +357,6 @@ select count(*) from tbl_emp
     </div>
 
 
-
-    <nav id="article-nav">
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/09/16/hello-world/">
-                    Hello World
-                </a>
-            </div>
-        
-    </nav>
 
   
 </article>
@@ -439,13 +426,11 @@ select count(*) from tbl_emp
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/09/16/hello-world/" title="下一篇: Hello World">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/09/17/MyBatis-DAO层实现两种方法/">MyBatis DAO层实现的两种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/16/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/03/new-article/">Hello World</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/09/17/MyBatis-DAO层实现两种方法/">MyBatis DAO层实现的两种方法</a></li></ul>
 
 
 
