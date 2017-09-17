@@ -298,7 +298,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>description: “使用mybatis实现DAO层的2种方式”</p>
+        <a id="more"></a>
+<p>使用mybatis实现DAO层的2种方式</p>
 <p></p><h4><br>第一种方法：基于注解的配置方式<br></h4><br>通过注解配置的方式要注意普通sql语句和动态sql两种情况。<br>普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。<br>使用方法：以@Select为例通过ID查询信息，其他3种类似。<p></p>
 <pre><code>@Select(&quot;select * from &quot;+DEPTTABLE+&quot; where ID = #{id}&quot;)
 Dept selectById(int id);
