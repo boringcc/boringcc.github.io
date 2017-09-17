@@ -269,6 +269,95 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-MyBatis-DAO层实现两种方法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/17/MyBatis-DAO层实现两种方法/" class="article-date">
+      <time datetime="2017-09-17T05:37:28.000Z" itemprop="datePublished">2017-09-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/17/MyBatis-DAO层实现两种方法/">MyBatis DAO层实现的两种方法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p></p><h4><br>第一种方法：基于注解的配置方式<br></h4><br>通过注解配置的方式要注意普通sql语句和动态sql两种情况。<br>普通sql的注解有@Select,@Delete,@insert,@update四种，可以完成常见的CRUD操作。<br>使用方法：以@Select为例通过ID查询信息，其他3种类似。<p></p>
+<pre><code>@Select(&quot;select * from &quot;+DEPTTABLE+&quot; where ID = #{id}&quot;)
+Dept selectById(int id);
+</code></pre><p>要实现复杂的动态sql查询，则需要额外创建Provider类来实现。<br>支持动态sql的注解有@SelectProvider,@InsertProvider,@UpdateProvider,@DeleteProvider四种<br>注解中常用的2种参数<br>①type:指定动态sql方法的类<br>②method:该类中对应的方法<br>使用方法：动态查询总数量</p>
+<pre><code>@SelectProvider(type=DeptDynaSqlProvider.class,method=&quot;count&quot;)
+Integer count(Map&lt;String, Object&gt; params);
+</code></pre><p>通过该注解会自动匹配到DeptDynaSqlProvider类中的count方法</p>
+<pre><code>//动态查询总量
+public String count(final Map&lt;String, Object&gt; params){
+    return new SQL(){
+        {
+            SELECT(&quot;count(*)&quot;);
+            FROM(DEPTTABLE);
+            if(params.get(&quot;dept&quot;) != null){
+                Dept dept = (Dept) params.get(&quot;dept&quot;);
+                if(dept.getName() != null &amp;&amp; !dept.getName().equals(&quot;&quot;)){
+                    WHERE(&quot;  name LIKE CONCAT (&apos;%&apos;,#{dept.name},&apos;%&apos;) &quot;);
+                }
+            }
+        }
+    }.toString();
+}    
+</code></pre><p>以上就是通过注解的方式来实现与数据库的交互。</p>
+<p></p><h4><br>第二种方法：通过mapper.xml的方法实现DAO层。<br></h4><br>mapper.xml可以通过mybatis自动生成，但是会有部分地方要修改。<br>建议先通过mybatis自动生成，然后自己去修改成想要的状态，自动生成方法为MBG，可以自己去看一下。<p></p>
+<p>这是DAO层的一个接口。</p>
+<pre><code>long countByExample(EmployeeExample example);
+</code></pre><p>这是该DAO层对应的mapper.xml文件中与上面对应的sql查询方法。<br>该方法的3个参数：<br>①id:即DAO层接口方法的名字。<br>②parameterType：即对应方法所在的类。<br>③resultType：返回值类型。</p>
+<pre><code>&lt;select id=&quot;countByExample&quot; parameterType=&quot;com.atguigu.crud.bean.EmployeeExample&quot; resultType=&quot;java.lang.Long&quot;&gt;
+select count(*) from tbl_emp
+&lt;if test=&quot;_parameter != null&quot;&gt;
+  &lt;include refid=&quot;Example_Where_Clause&quot; /&gt;
+&lt;/if&gt;
+&lt;/select&gt;
+</code></pre><p>使用mapper.xml方法可以直接在xml文件中写动态sql语句。<br>以上就是mybatis实现DAO层的两种方法的大致了解。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
