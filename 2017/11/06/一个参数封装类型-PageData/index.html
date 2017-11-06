@@ -15,17 +15,17 @@
 
 
 
-<meta name="description" content="解决发送PUT，DELETE这类请求无法读取数据的方法">
+<meta name="description" content="注解方法和xml方法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringMVC框架中用RestFul风格发送请求出现的问题">
-<meta property="og:url" content="http://yoursite.com/2017/09/17/RestFul风格发送请求出现的问题/index.html">
+<meta property="og:title" content="一个参数封装类型--PageData">
+<meta property="og:url" content="http://yoursite.com/2017/11/06/一个参数封装类型-PageData/index.html">
 <meta property="og:site_name" content="CC&#39;blog">
-<meta property="og:description" content="解决发送PUT，DELETE这类请求无法读取数据的方法">
+<meta property="og:description" content="注解方法和xml方法">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-09-17T12:57:58.405Z">
+<meta property="og:updated_time" content="2017-11-06T14:13:19.075Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SpringMVC框架中用RestFul风格发送请求出现的问题">
-<meta name="twitter:description" content="解决发送PUT，DELETE这类请求无法读取数据的方法">
+<meta name="twitter:title" content="一个参数封装类型--PageData">
+<meta name="twitter:description" content="注解方法和xml方法">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -57,7 +57,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>SpringMVC框架中用RestFul风格发送请求出现的问题 | CC&#39;blog</title>
+<title>一个参数封装类型--PageData | CC&#39;blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -266,11 +266,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-RestFul风格发送请求出现的问题" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-一个参数封装类型-PageData" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/09/17/RestFul风格发送请求出现的问题/" class="article-date">
-      <time datetime="2017-09-17T12:23:47.000Z" itemprop="datePublished">2017-09-17</time>
+      <a href="/2017/11/06/一个参数封装类型-PageData/" class="article-date">
+      <time datetime="2017-11-06T14:02:05.000Z" itemprop="datePublished">2017-11-06</time>
 </a>
 
 
@@ -285,7 +285,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      SpringMVC框架中用RestFul风格发送请求出现的问题
+      一个参数封装类型--PageData
     </h1>
   
 
@@ -302,32 +302,153 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p></p><h4>RESTful简单说明</h4><br>普通的2种请求方式有GET，POST两种。<br>而RESTful中可以使用动词更加形象的实现资源的CRUD。<br>例如：<br>GET    用来获取资源，<br>POST  用来新建资源（也可以用于更新资源），<br>PUT    用来更新资源，<br>DELETE  用来删除资源。<p></p>
-<p></p><h4>Javaweb中使用GET，POST以外的请求方式出现的问题和解决方法</h4><br>如果你发送的请求格式如下：<br>url: …….<br>type: “PUT”<br>data: 数据<br>..<br>则可能出现点击更新按钮后不会发生改变。<br>你会发现你所封装的数据全部变为NULL，这可能会导致sql语句出错，无法执行更新操作。<p></p>
-<p></p><h5>原因</h5><br>①：Tomcat将请求体中的数据封装为一个map。<br>②：request.getParameter(“..”)就会从该map中取值。<br>③：SpringMVC封装POJO对象的时候会将POJO中每个属性的值用reques.getParamter方法获取。<br>主要原因：Tomcat只会封装POST请求，所以SpringMVC的POJO对象的值全为NULL。<p></p>
-<p></p><h5>第一种解决方法</h5><br>将请求格式改为：<br>url: …….<br>type: “POST”<br>data: 数据+”&amp;_method=PUT”<br>..<p></p>
-<p></p><h5>第二种解决方法</h5><br>请求的格式不改变，在web.xml文件中添加下面的过滤器即可<p></p>
-<pre><code>&lt;!-- 使用Rest风格的URI，将页面普通的post请求转为指定的delete或者put请求 --&gt;
-&lt;!--这个过滤器是可以让form表单提交PUT,DELETE这类请求 --&gt;
-&lt;filter&gt;
-    &lt;filter-name&gt;HiddenHttpMethodFilter&lt;/filter-name&gt;
-    &lt;filter-class&gt;org.springframework.web.filter.HiddenHttpMethodFilter&lt;/filter-class&gt;
-&lt;/filter&gt;
-&lt;filter-mapping&gt;
-    &lt;filter-name&gt;HiddenHttpMethodFilter&lt;/filter-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-&lt;/filter-mapping&gt;
+        <p><contents></contents></p>
+<p></p><h4>PageData类—-参数封装Map<h4><p></p>
+<pre><code>package com.fh.util;
 
-&lt;!--该过滤器是将request重新包装，使其转变为PUT,DELETE这类请求 --&gt;
-&lt;filter&gt;
-    &lt;filter-name&gt;HttpPutFormContentFilter&lt;/filter-name&gt;
-    &lt;filter-class&gt;org.springframework.web.filter.HttpPutFormContentFilter&lt;/filter-class&gt;
-&lt;/filter&gt;
-&lt;filter-mapping&gt;
-    &lt;filter-name&gt;HttpPutFormContentFilter&lt;/filter-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-&lt;/filter-mapping&gt;
-</code></pre>
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.alibaba.druid.proxy.jdbc.ClobProxyImpl;
+/** 
+ * 说明：参数封装Map
+ */
+public class PageData extends HashMap implements Map{
+
+    private static final long serialVersionUID = 1L;
+
+    Map map = null;
+    HttpServletRequest request;
+    public PageData(HttpServletRequest request){
+        this.request = request;
+        Map properties = request.getParameterMap();
+        Map returnMap = new HashMap(); 
+        Iterator entries = properties.entrySet().iterator(); 
+        Map.Entry entry; 
+        String name = &quot;&quot;;  
+        String value = &quot;&quot;;  
+        while (entries.hasNext()) {
+            entry = (Map.Entry) entries.next(); 
+            name = (String) entry.getKey(); 
+            Object valueObj = entry.getValue(); 
+            if(null == valueObj){ 
+                value = &quot;&quot;; 
+            }else if(valueObj instanceof String[]){ 
+                String[] values = (String[])valueObj;
+                for(int i=0;i&lt;values.length;i++){ 
+                     value = values[i] + &quot;,&quot;;
+                }
+                value = value.substring(0, value.length()-1); 
+            }else{
+                value = valueObj.toString(); 
+            }
+            returnMap.put(name, value); 
+        }
+        map = returnMap;
+    }
+
+    public PageData() {
+        map = new HashMap();
+    }
+
+    @Override
+    public Object get(Object key) {
+        Object obj = null;
+        if(map.get(key) instanceof Object[]) {
+            Object[] arr = (Object[])map.get(key);
+            obj = request == null ? arr:(request.getParameter((String)key) == null ? arr:arr[0]);
+        } else {
+            obj = map.get(key);
+        }
+        return obj;
+    }
+
+    public String getString(Object key) {
+        return (String)get(key);
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    @Override
+    public Object put(Object key, Object value) {
+        if(value instanceof ClobProxyImpl){             //读取oracle Clob类型数据
+            try {
+                ClobProxyImpl cpi = (ClobProxyImpl)value;
+                Reader is = cpi.getCharacterStream();     //获取流
+                BufferedReader br = new BufferedReader(is);
+                String str = br.readLine();
+                StringBuffer sb = new StringBuffer();
+                while(str != null){                        //循环读取数据拼接到字符串
+                    sb.append(str);
+                    sb.append(&quot;\n&quot;);
+                    str = br.readLine();
+                }
+                value = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return map.put(key, value);
+    }
+
+    @Override
+    public Object remove(Object key) {
+        return map.remove(key);
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
+    public boolean containsKey(Object key) {
+        // TODO Auto-generated method stub
+        return map.containsKey(key);
+    }
+
+    public boolean containsValue(Object value) {
+        // TODO Auto-generated method stub
+        return map.containsValue(value);
+    }
+
+    public Set entrySet() {
+        // TODO Auto-generated method stub
+        return map.entrySet();
+    }
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return map.isEmpty();
+    }
+
+    public Set keySet() {
+        // TODO Auto-generated method stub
+        return map.keySet();
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public void putAll(Map t) {
+        // TODO Auto-generated method stub
+        map.putAll(t);
+    }
+
+    public int size() {
+        // TODO Auto-generated method stub
+        return map.size();
+    }
+
+    public Collection values() {
+        // TODO Auto-generated method stub
+        return map.values();
+    }
+
+}
+</code></pre></h4></h4>
       
     </div>
     
@@ -335,13 +456,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/09/17/RestFul风格发送请求出现的问题/">SpringMVC框架中用RestFul风格发送请求出现的问题</a></p>
+        <p><span>本文标题:</span><a href="/2017/11/06/一个参数封装类型-PageData/">一个参数封装类型--PageData</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">C C</a></p>
-        <p><span>发布时间:</span>2017-09-17, 20:23:47</p>
-        <p><span>最后更新:</span>2017-09-17, 20:57:58</p>
+        <p><span>发布时间:</span>2017-11-06, 22:02:05</p>
+        <p><span>最后更新:</span>2017-11-06, 22:13:19</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/09/17/RestFul风格发送请求出现的问题/" title="SpringMVC框架中用RestFul风格发送请求出现的问题">http://yoursite.com/2017/09/17/RestFul风格发送请求出现的问题/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/09/17/RestFul风格发送请求出现的问题/　　作者: C C" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/06/一个参数封装类型-PageData/" title="一个参数封装类型--PageData">http://yoursite.com/2017/11/06/一个参数封装类型-PageData/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/11/06/一个参数封装类型-PageData/　　作者: C C" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -353,16 +474,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/11/06/一个参数封装类型-PageData/">
-                    一个参数封装类型--PageData
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/09/17/MyBatis-DAO层实现两种方法/">
-                    MyBatis DAO层实现的两种方法
+                <a href="/2017/09/17/RestFul风格发送请求出现的问题/">
+                    SpringMVC框架中用RestFul风格发送请求出现的问题
                 </a>
             </div>
         
@@ -374,7 +489,297 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">RESTful简单说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">Javaweb中使用GET，POST以外的请求方式出现的问题和解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.1.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.2.</span> <span class="toc-text">第一种解决方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.3.</span> <span class="toc-text">第二种解决方法</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">PageData类—-参数封装Map
+package com.fh.util;
+
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.alibaba.druid.proxy.jdbc.ClobProxyImpl;
+/** 
+ * 说明：参数封装Map
+ */
+public class PageData extends HashMap implements Map{
+
+    private static final long serialVersionUID = 1L;
+
+    Map map = null;
+    HttpServletRequest request;
+    public PageData(HttpServletRequest request){
+        this.request = request;
+        Map properties = request.getParameterMap();
+        Map returnMap = new HashMap(); 
+        Iterator entries = properties.entrySet().iterator(); 
+        Map.Entry entry; 
+        String name = "";  
+        String value = "";  
+        while (entries.hasNext()) {
+            entry = (Map.Entry) entries.next(); 
+            name = (String) entry.getKey(); 
+            Object valueObj = entry.getValue(); 
+            if(null == valueObj){ 
+                value = ""; 
+            }else if(valueObj instanceof String[]){ 
+                String[] values = (String[])valueObj;
+                for(int i=0;i<values.length;i++){ 
+                     value = values[i] + ",";
+                }
+                value = value.substring(0, value.length()-1); 
+            }else{
+                value = valueObj.toString(); 
+            }
+            returnMap.put(name, value); 
+        }
+        map = returnMap;
+    }
+
+    public PageData() {
+        map = new HashMap();
+    }
+
+    @Override
+    public Object get(Object key) {
+        Object obj = null;
+        if(map.get(key) instanceof Object[]) {
+            Object[] arr = (Object[])map.get(key);
+            obj = request == null ? arr:(request.getParameter((String)key) == null ? arr:arr[0]);
+        } else {
+            obj = map.get(key);
+        }
+        return obj;
+    }
+
+    public String getString(Object key) {
+        return (String)get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object put(Object key, Object value) {
+        if(value instanceof ClobProxyImpl){             //读取oracle Clob类型数据
+            try {
+                ClobProxyImpl cpi = (ClobProxyImpl)value;
+                Reader is = cpi.getCharacterStream();     //获取流
+                BufferedReader br = new BufferedReader(is);
+                String str = br.readLine();
+                StringBuffer sb = new StringBuffer();
+                while(str != null){                        //循环读取数据拼接到字符串
+                    sb.append(str);
+                    sb.append("\n");
+                    str = br.readLine();
+                }
+                value = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return map.put(key, value);
+    }
+
+    @Override
+    public Object remove(Object key) {
+        return map.remove(key);
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
+    public boolean containsKey(Object key) {
+        // TODO Auto-generated method stub
+        return map.containsKey(key);
+    }
+
+    public boolean containsValue(Object value) {
+        // TODO Auto-generated method stub
+        return map.containsValue(value);
+    }
+
+    public Set entrySet() {
+        // TODO Auto-generated method stub
+        return map.entrySet();
+    }
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return map.isEmpty();
+    }
+
+    public Set keySet() {
+        // TODO Auto-generated method stub
+        return map.keySet();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void putAll(Map t) {
+        // TODO Auto-generated method stub
+        map.putAll(t);
+    }
+
+    public int size() {
+        // TODO Auto-generated method stub
+        return map.size();
+    }
+
+    public Collection values() {
+        // TODO Auto-generated method stub
+        return map.values();
+    }
+
+}
+</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">
+package com.fh.util;
+
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.alibaba.druid.proxy.jdbc.ClobProxyImpl;
+/** 
+ * 说明：参数封装Map
+ */
+public class PageData extends HashMap implements Map{
+
+    private static final long serialVersionUID = 1L;
+
+    Map map = null;
+    HttpServletRequest request;
+    public PageData(HttpServletRequest request){
+        this.request = request;
+        Map properties = request.getParameterMap();
+        Map returnMap = new HashMap(); 
+        Iterator entries = properties.entrySet().iterator(); 
+        Map.Entry entry; 
+        String name = "";  
+        String value = "";  
+        while (entries.hasNext()) {
+            entry = (Map.Entry) entries.next(); 
+            name = (String) entry.getKey(); 
+            Object valueObj = entry.getValue(); 
+            if(null == valueObj){ 
+                value = ""; 
+            }else if(valueObj instanceof String[]){ 
+                String[] values = (String[])valueObj;
+                for(int i=0;i<values.length;i++){ 
+                     value = values[i] + ",";
+                }
+                value = value.substring(0, value.length()-1); 
+            }else{
+                value = valueObj.toString(); 
+            }
+            returnMap.put(name, value); 
+        }
+        map = returnMap;
+    }
+
+    public PageData() {
+        map = new HashMap();
+    }
+
+    @Override
+    public Object get(Object key) {
+        Object obj = null;
+        if(map.get(key) instanceof Object[]) {
+            Object[] arr = (Object[])map.get(key);
+            obj = request == null ? arr:(request.getParameter((String)key) == null ? arr:arr[0]);
+        } else {
+            obj = map.get(key);
+        }
+        return obj;
+    }
+
+    public String getString(Object key) {
+        return (String)get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object put(Object key, Object value) {
+        if(value instanceof ClobProxyImpl){             //读取oracle Clob类型数据
+            try {
+                ClobProxyImpl cpi = (ClobProxyImpl)value;
+                Reader is = cpi.getCharacterStream();     //获取流
+                BufferedReader br = new BufferedReader(is);
+                String str = br.readLine();
+                StringBuffer sb = new StringBuffer();
+                while(str != null){                        //循环读取数据拼接到字符串
+                    sb.append(str);
+                    sb.append("\n");
+                    str = br.readLine();
+                }
+                value = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return map.put(key, value);
+    }
+
+    @Override
+    public Object remove(Object key) {
+        return map.remove(key);
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
+    public boolean containsKey(Object key) {
+        // TODO Auto-generated method stub
+        return map.containsKey(key);
+    }
+
+    public boolean containsValue(Object value) {
+        // TODO Auto-generated method stub
+        return map.containsValue(value);
+    }
+
+    public Set entrySet() {
+        // TODO Auto-generated method stub
+        return map.entrySet();
+    }
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return map.isEmpty();
+    }
+
+    public Set keySet() {
+        // TODO Auto-generated method stub
+        return map.keySet();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void putAll(Map t) {
+        // TODO Auto-generated method stub
+        map.putAll(t);
+    }
+
+    public int size() {
+        // TODO Auto-generated method stub
+        return map.size();
+    }
+
+    public Collection values() {
+        // TODO Auto-generated method stub
+        return map.values();
+    }
+
+}
+</span></a></li></ol>
         
     </div>
     <style>
@@ -410,7 +815,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"SpringMVC框架中用RestFul风格发送请求出现的问题　| CC'blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"一个参数封装类型--PageData　| CC'blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -430,15 +835,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/11/06/一个参数封装类型-PageData/" title="上一篇: 一个参数封装类型--PageData">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/09/17/MyBatis-DAO层实现两种方法/" title="下一篇: MyBatis DAO层实现的两种方法">
+            <a href="/2017/09/17/RestFul风格发送请求出现的问题/" title="下一篇: SpringMVC框架中用RestFul风格发送请求出现的问题">
                 <i class="fa fa-angle-right"></i>
             </a>
         
