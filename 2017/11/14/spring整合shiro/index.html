@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="该抖动效果可以在发生错误时实现一个提示的效果。">
-<meta name="keywords" content="-JavaScript">
+<meta name="description" content="配置shiro。">
+<meta name="keywords" content="-shiro">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用js实现页面抖动的效果">
-<meta property="og:url" content="http://yoursite.com/2017/11/14/页面抖动效果js实现/index.html">
+<meta property="og:title" content="Spring整合shiro">
+<meta property="og:url" content="http://yoursite.com/2017/11/14/spring整合shiro/index.html">
 <meta property="og:site_name" content="CC&#39;blog">
-<meta property="og:description" content="该抖动效果可以在发生错误时实现一个提示的效果。">
+<meta property="og:description" content="配置shiro。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-11-14T03:48:34.303Z">
+<meta property="og:updated_time" content="2017-11-14T08:01:34.312Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用js实现页面抖动的效果">
-<meta name="twitter:description" content="该抖动效果可以在发生错误时实现一个提示的效果。">
+<meta name="twitter:title" content="Spring整合shiro">
+<meta name="twitter:description" content="配置shiro。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>用js实现页面抖动的效果 | CC&#39;blog</title>
+<title>Spring整合shiro | CC&#39;blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -267,11 +267,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-页面抖动效果js实现" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-spring整合shiro" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/11/14/页面抖动效果js实现/" class="article-date">
-      <time datetime="2017-11-14T02:53:05.000Z" itemprop="datePublished">2017-11-14</time>
+      <a href="/2017/11/14/spring整合shiro/" class="article-date">
+      <time datetime="2017-11-14T07:19:45.000Z" itemprop="datePublished">2017-11-14</time>
 </a>
 
 
@@ -286,7 +286,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      用js实现页面抖动的效果
+      Spring整合shiro
     </h1>
   
 
@@ -297,7 +297,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">-JavaScript</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shiro/">-shiro</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -307,47 +307,40 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <contents>
+        <p><contents></contents></p>
+<h4>第一步：导入对应的包或添加对应的Maven依赖<h4><br><br>Jar包：<br>  -shiro-all-1.3.2.jar<br>  -log4j-1.2.15.jar<br>  -slf4j-api-1.61.jar<br>  -slf4j-log4j12-1.6.1.jar<br><br>Maven依赖<br><br>      <dependency><br>        <groupid>org.apache.shiro</groupid><br>        <artifactid>shiro-all</artifactid><br>        <version>1.4.0</version><br>      </dependency><br><br><h4>第二步：在web.xml文件中加入下面的配置<h4><br><br>      <filter><br>        <filter-name>shiroFilter</filter-name><br>        <filter-class><br>          org.springframework.web.filter.DelegatingFilterProxy<br>        </filter-class><br>        <init-param><br>          <param-name>targetFilterLifecycle</param-name><br>          <param-value>true</param-value><br>        </init-param><br>      </filter><br>      <filter-mapping><br>        <filter-name>shiroFilter</filter-name><br>        <url-pattern>/*</url-pattern><br>      </filter-mapping><br><br>DelegathingFilterProxy的作用是自动到Spring容器中查找名字为<br>shiroFilter的bean并把所有Filter的操作委托给它。<br><br><h4>第三步：在spring的配置文件（一般是applicationContext.xml）中加入shiro的相关配置</h4>
 
-<h4>JavaScript实现抖动效果</h4>
+<p>①：shiro的安全管理器</p>
+<pre><code>&lt;bean id=&quot;securityManager&quot; class=&quot;org.apache.shiro.web.mgt.DefaultWebSecurityManager&quot;&gt;  
+        &lt;property name=&quot;realm&quot; ref=&quot;jdbcRealm&quot;&gt;&lt;/property&gt;  
+        &lt;property name=&quot;cacheManager&quot; ref=&quot;cacheManager&quot;&gt;&lt;/property&gt;  
+ &lt;/bean&gt;  
+</code></pre><p>这里面有2个相关的配置，一个是Realm，另一个是cacheManage。</p>
+<p>②：配置Realm–自定义的ShiroRealm</p>
+<p>创建一个shiroRealm的类实现Realm的接口即可。里面的方法这里不详细介绍。</p>
+<pre><code>&lt;bean id=&quot;ShiroRealm&quot; class=&quot;com.cc.admin.interceptor.shiro.ShiroRealm&quot; &gt;&lt;/bean&gt;
+</code></pre><p>③：配置cacheManage–这里用ehcache为例，要加入ehcache相关的jar包</p>
+<pre><code>&lt;bean id=&quot;cacheManager&quot; class=&quot;org.apache.shiro.cache.ehcache.EhCacheManager&quot;&gt;
+      &lt;property name=&quot;cacheManagerConfigFile&quot; value=&quot;classpath:ehcache.xml&quot;&gt;
+&lt;/bean&gt;
+</code></pre><p>里面的ehcache.xml可以在ehcache的jar包中找到。</p>
+<p>④：配置生命周期</p>
+<pre><code>&lt;bean id=&quot;lifecycleBeanPostProcessor&quot; class=&quot;org.apache.shiro.spring.LifecycleBeanPostProcessor&quot;&gt;&lt;/bean&gt;
+</code></pre><p>⑤：关键配置：shiroFilter（id必须和web.xml文件中配置的DelegatingFilterProxy的Filter-name一致）</p>
+<pre><code>&lt;bean id=&quot;shiroFilter&quot; class=&quot;org.apache.shiro.spring.web.ShiroFilterFactoryBean&quot;&gt;
+            &lt;property name=&quot;securityManager&quot; ref=&quot;securityManager&quot; /&gt;
+            &lt;property name=&quot;loginUrl&quot; value=&quot;/login.jsp&quot; /&gt;             //登录页面
+            &lt;property name=&quot;successUrl&quot; value=&quot;/**.jsp&quot; /&gt;                   //登录成功页面
+            &lt;property name=&quot;unauthorizedUrl&quot; value=&quot;/**.jsp&quot; /&gt;  //没有权限的页面
 
-
-<pre><code>&lt;script&gt;
-    var timer;
-    var fhi = 1;
-    var current = 0;
-    var current2 = 1;
-    function showfh() {
-        fhi = 1;
-        timer = setInterval(xzfh,10);
-    };
-    function xzfh() {
-        if(fhi&gt;50){
-            document.body.style.transform = &apos;rotate(0deg)&apos;;
-            clearInterval(timer);
-            return;
-        }
-        current = (current2)%360;
-        document.body.style.transform = &apos;rotate(&apos; + current + &apos;deg)&apos;;
-        current ++;
-        if(current2 == 1){current2 = -1;}
-        else{current2 = 1 ;}
-        fhi++;
-    };
-&lt;/script&gt;
-</code></pre><h4>实现该效果需要了解的一些js相关的知识。</h4>
-
-<p>①：setInterval(code,millisec)—周期性的调用函数</p>
-<p>—code 必需。要调用的函数或要执行的代码串。 </p>
-<p>—millisec 必须。周期性执行或调用 code 之间的时间间隔，以毫秒计。 </p>
-<p>②：clearInterval（） 该方法是取消setInterval中设置的时间，即可以取消这个函数的执行。</p>
-<p>③：document.body.style.transform = ‘rotate(‘ + current + ‘deg)’;</p>
-<p>—-该方法是可以使body元素进行旋转、缩放、移动或倾斜。等操作 </p>
-<p>—-rotate是2D旋转， current是旋转度数的大小，deg是度的定义。</p>
-<h4>该方法的实现原理</h4>
-
-<p>如果触发showfh()则将xzfh()该函数每10ms执行一次，然后通过transform的效果使body元素先顺时针旋转<br>然后通过current的正负来改变旋转的方向，通过短时间内不断改变方向的旋转达到抖动的效果，当fhi计数<br>器达到50次则停止调用xzfh()函数，即停止抖动。</p>
-</contents>
+            //配置那些页面需要权限
+            &lt;property name=&quot;filterChainDefinitions&quot;&gt;
+                &lt;value&gt;
+                   /**    = anon
+                &lt;/value&gt;
+            &lt;/property&gt;
+        &lt;/bean&gt;     
+</code></pre></h4></h4></h4></h4>
       
     </div>
     
@@ -355,13 +348,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/11/14/页面抖动效果js实现/">用js实现页面抖动的效果</a></p>
+        <p><span>本文标题:</span><a href="/2017/11/14/spring整合shiro/">Spring整合shiro</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">C C</a></p>
-        <p><span>发布时间:</span>2017-11-14, 10:53:05</p>
-        <p><span>最后更新:</span>2017-11-14, 11:48:34</p>
+        <p><span>发布时间:</span>2017-11-14, 15:19:45</p>
+        <p><span>最后更新:</span>2017-11-14, 16:01:34</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/11/14/页面抖动效果js实现/" title="用js实现页面抖动的效果">http://yoursite.com/2017/11/14/页面抖动效果js实现/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/11/14/页面抖动效果js实现/　　作者: C C" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/14/spring整合shiro/" title="Spring整合shiro">http://yoursite.com/2017/11/14/spring整合shiro/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/11/14/spring整合shiro/　　作者: C C" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -373,16 +366,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/11/14/spring整合shiro/">
-                    Spring整合shiro
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/11/06/MD5加密/">
-                    MD5加密
+                <a href="/2017/11/14/页面抖动效果js实现/">
+                    用js实现页面抖动的效果
                 </a>
             </div>
         
@@ -394,7 +381,135 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">JavaScript实现抖动效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">实现该效果需要了解的一些js相关的知识。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">该方法的实现原理</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">第一步：导入对应的包或添加对应的Maven依赖Jar包：  -shiro-all-1.3.2.jar  -log4j-1.2.15.jar  -slf4j-api-1.61.jar  -slf4j-log4j12-1.6.1.jarMaven依赖              org.apache.shiro        shiro-all        1.4.0      第二步：在web.xml文件中加入下面的配置              shiroFilter                  org.springframework.web.filter.DelegatingFilterProxy                          targetFilterLifecycle          true                            shiroFilter        /*      DelegathingFilterProxy的作用是自动到Spring容器中查找名字为shiroFilter的bean并把所有Filter的操作委托给它。第三步：在spring的配置文件（一般是applicationContext.xml）中加入shiro的相关配置
+
+①：shiro的安全管理器
+<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="jdbcRealm"></property>  
+        <property name="cacheManager" ref="cacheManager"></property>  
+ </bean>  
+这里面有2个相关的配置，一个是Realm，另一个是cacheManage。
+②：配置Realm–自定义的ShiroRealm
+创建一个shiroRealm的类实现Realm的接口即可。里面的方法这里不详细介绍。
+<bean id="ShiroRealm" class="com.cc.admin.interceptor.shiro.ShiroRealm" ></bean>
+③：配置cacheManage–这里用ehcache为例，要加入ehcache相关的jar包
+<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+      <property name="cacheManagerConfigFile" value="classpath:ehcache.xml">
+</bean>
+里面的ehcache.xml可以在ehcache的jar包中找到。
+④：配置生命周期
+<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+⑤：关键配置：shiroFilter（id必须和web.xml文件中配置的DelegatingFilterProxy的Filter-name一致）
+<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+            <property name="securityManager" ref="securityManager" />
+            <property name="loginUrl" value="/login.jsp" />             //登录页面
+            <property name="successUrl" value="/**.jsp" />                   //登录成功页面
+            <property name="unauthorizedUrl" value="/**.jsp" />  //没有权限的页面
+
+            //配置那些页面需要权限
+            <property name="filterChainDefinitions">
+                <value>
+                   /**    = anon
+                </value>
+            </property>
+        </bean>     
+</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">Jar包：  -shiro-all-1.3.2.jar  -log4j-1.2.15.jar  -slf4j-api-1.61.jar  -slf4j-log4j12-1.6.1.jarMaven依赖              org.apache.shiro        shiro-all        1.4.0      第二步：在web.xml文件中加入下面的配置              shiroFilter                  org.springframework.web.filter.DelegatingFilterProxy                          targetFilterLifecycle          true                            shiroFilter        /*      DelegathingFilterProxy的作用是自动到Spring容器中查找名字为shiroFilter的bean并把所有Filter的操作委托给它。第三步：在spring的配置文件（一般是applicationContext.xml）中加入shiro的相关配置
+
+①：shiro的安全管理器
+<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="jdbcRealm"></property>  
+        <property name="cacheManager" ref="cacheManager"></property>  
+ </bean>  
+这里面有2个相关的配置，一个是Realm，另一个是cacheManage。
+②：配置Realm–自定义的ShiroRealm
+创建一个shiroRealm的类实现Realm的接口即可。里面的方法这里不详细介绍。
+<bean id="ShiroRealm" class="com.cc.admin.interceptor.shiro.ShiroRealm" ></bean>
+③：配置cacheManage–这里用ehcache为例，要加入ehcache相关的jar包
+<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+      <property name="cacheManagerConfigFile" value="classpath:ehcache.xml">
+</bean>
+里面的ehcache.xml可以在ehcache的jar包中找到。
+④：配置生命周期
+<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+⑤：关键配置：shiroFilter（id必须和web.xml文件中配置的DelegatingFilterProxy的Filter-name一致）
+<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+            <property name="securityManager" ref="securityManager" />
+            <property name="loginUrl" value="/login.jsp" />             //登录页面
+            <property name="successUrl" value="/**.jsp" />                   //登录成功页面
+            <property name="unauthorizedUrl" value="/**.jsp" />  //没有权限的页面
+
+            //配置那些页面需要权限
+            <property name="filterChainDefinitions">
+                <value>
+                   /**    = anon
+                </value>
+            </property>
+        </bean>     
+</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">第二步：在web.xml文件中加入下面的配置              shiroFilter                  org.springframework.web.filter.DelegatingFilterProxy                          targetFilterLifecycle          true                            shiroFilter        /*      DelegathingFilterProxy的作用是自动到Spring容器中查找名字为shiroFilter的bean并把所有Filter的操作委托给它。第三步：在spring的配置文件（一般是applicationContext.xml）中加入shiro的相关配置
+
+①：shiro的安全管理器
+<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="jdbcRealm"></property>  
+        <property name="cacheManager" ref="cacheManager"></property>  
+ </bean>  
+这里面有2个相关的配置，一个是Realm，另一个是cacheManage。
+②：配置Realm–自定义的ShiroRealm
+创建一个shiroRealm的类实现Realm的接口即可。里面的方法这里不详细介绍。
+<bean id="ShiroRealm" class="com.cc.admin.interceptor.shiro.ShiroRealm" ></bean>
+③：配置cacheManage–这里用ehcache为例，要加入ehcache相关的jar包
+<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+      <property name="cacheManagerConfigFile" value="classpath:ehcache.xml">
+</bean>
+里面的ehcache.xml可以在ehcache的jar包中找到。
+④：配置生命周期
+<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+⑤：关键配置：shiroFilter（id必须和web.xml文件中配置的DelegatingFilterProxy的Filter-name一致）
+<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+            <property name="securityManager" ref="securityManager" />
+            <property name="loginUrl" value="/login.jsp" />             //登录页面
+            <property name="successUrl" value="/**.jsp" />                   //登录成功页面
+            <property name="unauthorizedUrl" value="/**.jsp" />  //没有权限的页面
+
+            //配置那些页面需要权限
+            <property name="filterChainDefinitions">
+                <value>
+                   /**    = anon
+                </value>
+            </property>
+        </bean>     
+</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">              shiroFilter                  org.springframework.web.filter.DelegatingFilterProxy                          targetFilterLifecycle          true                            shiroFilter        /*      DelegathingFilterProxy的作用是自动到Spring容器中查找名字为shiroFilter的bean并把所有Filter的操作委托给它。第三步：在spring的配置文件（一般是applicationContext.xml）中加入shiro的相关配置
+
+①：shiro的安全管理器
+<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="jdbcRealm"></property>  
+        <property name="cacheManager" ref="cacheManager"></property>  
+ </bean>  
+这里面有2个相关的配置，一个是Realm，另一个是cacheManage。
+②：配置Realm–自定义的ShiroRealm
+创建一个shiroRealm的类实现Realm的接口即可。里面的方法这里不详细介绍。
+<bean id="ShiroRealm" class="com.cc.admin.interceptor.shiro.ShiroRealm" ></bean>
+③：配置cacheManage–这里用ehcache为例，要加入ehcache相关的jar包
+<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+      <property name="cacheManagerConfigFile" value="classpath:ehcache.xml">
+</bean>
+里面的ehcache.xml可以在ehcache的jar包中找到。
+④：配置生命周期
+<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+⑤：关键配置：shiroFilter（id必须和web.xml文件中配置的DelegatingFilterProxy的Filter-name一致）
+<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+            <property name="securityManager" ref="securityManager" />
+            <property name="loginUrl" value="/login.jsp" />             //登录页面
+            <property name="successUrl" value="/**.jsp" />                   //登录成功页面
+            <property name="unauthorizedUrl" value="/**.jsp" />  //没有权限的页面
+
+            //配置那些页面需要权限
+            <property name="filterChainDefinitions">
+                <value>
+                   /**    = anon
+                </value>
+            </property>
+        </bean>     
+</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">第三步：在spring的配置文件（一般是applicationContext.xml）中加入shiro的相关配置</span></a></li></ol>
         
     </div>
     <style>
@@ -430,7 +545,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"用js实现页面抖动的效果　| CC'blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Spring整合shiro　| CC'blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -450,15 +565,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/11/14/spring整合shiro/" title="上一篇: Spring整合shiro">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/11/06/MD5加密/" title="下一篇: MD5加密">
+            <a href="/2017/11/14/页面抖动效果js实现/" title="下一篇: 用js实现页面抖动的效果">
                 <i class="fa fa-angle-right"></i>
             </a>
         
